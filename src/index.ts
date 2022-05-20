@@ -1,9 +1,10 @@
 #!/usr/bin/env node
+
 import chalk from "chalk";
 import clear from "clear";
 import figlet from "figlet";
 import {program} from "commander";
-
+import Service from  './Service'
 clear();
 console.log(
   chalk.red(
@@ -19,3 +20,6 @@ program
   .option('-c, --cheese <type>', 'Add the specified type of cheese [marble]')
   .option('-C, --no-cheese', 'You do not want any cheese')
   .parse(process.argv);
+
+  const service = new Service();
+  service.run();
