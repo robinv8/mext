@@ -32,8 +32,19 @@ const getDvaData = () => {
 const dvaApp = createApp({
   ...(isBrowser() ? getDvaData().props.pageProps : { initialState: {} })
 });
-const makeStore = () => {
+export const makeStore = () => {
   return dvaApp.getStore();
 };
 
 export const wrapper = createWrapper(makeStore);
+
+export default {
+  getDvaApp: () => {
+    return {
+      _store: store,
+    };
+  },
+  getDispatch: () => {
+    return app.dispatch;
+  },
+};
