@@ -9,6 +9,12 @@
     "strict": true,
     "types": ["node"],
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "noImplicitAny": false,
+    "baseUrl": "./",
+    "paths": {
+      "@utils": ["src/utils"]
+    }
   }
 }
