@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { basename, dirname, extname, join, relative } from 'path';
 import { readFileSync, writeFileSync } from 'fs';
 import { getModels } from './getModels/getModels';
@@ -38,7 +39,6 @@ export default () => {
         .join('\r\n'),
       RegisterModels: models
         .map((path, index) => {
-          // prettier-ignore
           return `
 app.model({ namespace: '${basename(path, extname(path))}', ...Model${lodash.upperFirst(lodash.camelCase(basename(path, extname(path))))}${index} });
           `.trim();

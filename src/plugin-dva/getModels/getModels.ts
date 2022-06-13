@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { readFileSync } from 'fs';
 import { join, relative } from 'path';
 import { isValidModel } from './isValidModel';

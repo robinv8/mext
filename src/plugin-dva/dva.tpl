@@ -25,10 +25,13 @@ const isBrowser = () => {
   return typeof window !== 'undefined';
 };
 const getDvaData = () => {
-  const dataStr = document.getElementById('__NEXT_DATA__')
-  const data = JSON.parse(dataStr.innerText)
-  return data
-}
+  const dataStr = document.getElementById('__NEXT_DATA__');
+  const data = JSON.parse(dataStr.innerText);
+  data.props.pageProps.initialState = JSON.parse(
+    data.props.pageProps.initialState,
+  );
+  return data;
+};
 const dvaApp = createApp({
   ...(isBrowser() ? getDvaData().props.pageProps : { initialState: {} })
 });
@@ -36,7 +39,10 @@ export const makeStore = () => {
   return dvaApp.getStore();
 };
 
-export const wrapper = createWrapper(makeStore);
+export const wrapper = createWrapper(makeStore, {
+  serializeState: (state) => JSON.stringify(state),
+	deserializeState: (state) => JSON.parse(state),
+});
 
 export default {
   getDvaApp: () => {

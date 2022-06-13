@@ -36,7 +36,6 @@ class Service {
   }
   async run() {
     this.copyTask();
-    // next.tsconfig.json rename to tsconfig.json
     const nextConfigPath = path.join(this.appDir, '.uext', 'next.tsconfig.json');
     const tsConfigPath = path.join(this.appDir, '.uext', 'tsconfig.json');
     fs.renameSync(nextConfigPath, tsConfigPath);
@@ -45,8 +44,10 @@ class Service {
       this.transformTask(type);
     });
     this.routerTransformTask();
-    // this.umiToNext(path.join(this.appDir, 'src/pages/Portal'), 'index.tsx', 'pages')
     pluginDva();
+
+
+    // this.umiToNext(path.join(this.appDir, 'src/pages/Activity/components/Item'), 'index.tsx', 'pages')
   }
   async umiToNext(filePath, fileName, type) {
     const appDir = this.appDir;
@@ -83,27 +84,24 @@ class Service {
   }
   fileDisplay(filePath, type) {
     // 显示目录下的所有文件名
-    fs.readdir(filePath, (err, files) => {
-      if (err) {
-        console.warn(err);
+    const files = fs.readdirSync(filePath);
+
+    files.forEach((filename) => {
+      if (fs.statSync(path.join(filePath, filename)).isDirectory()) {
+        this.fileDisplay(path.join(filePath, filename), type);
       } else {
-        files.forEach((filename) => {
-          if (fs.statSync(path.join(filePath, filename)).isDirectory()) {
-            this.fileDisplay(path.join(filePath, filename), type);
-          } else {
-            if (filename.match('.tsx') && filePath.indexOf('__test__') === -1) {
-              this.umiToNext(filePath, filename, type);
-            } else if (filename.match('.scss')) {
-              if (filename.match('.module.scss')) {
-                this.copyFile(filePath, filename, type);
-              }
-            } else {
-              this.copyFile(filePath, filename, type);
-            }
+        if (filename.match('.tsx') && filename.indexOf('_app.page.tsx') === -1 && filePath.indexOf('__test__') === -1) {
+          this.umiToNext(filePath, filename, type)
+        } else if (filename.match('.scss')) {
+          if (filename.match('.module.scss')) {
+            this.copyFile(filePath, filename, type);
           }
-        });
+        } else {
+          this.copyFile(filePath, filename, type);
+        }
       }
     });
+
   }
   getCode(filePath, fileName) {
     return fs.readFileSync(path.join(filePath, fileName)).toString();
@@ -140,10 +138,22 @@ class Service {
           ]);
         });
         const newRoutes = t.arrayExpression(rewrites);
+        const arrowFunction = t.arrowFunctionExpression(
+          [],
+          newRoutes,
+        )
 
-        astPath.node.properties.push(
-          t.objectProperty(t.identifier('rewrites'), newRoutes),
+        arrowFunction.async = true;
+        const filtered = astPath.node.properties.filter(
+          (property) => property.key.name === 'rewrites',
         );
+        if (filtered.length > 0) {
+          filtered[0].value = arrowFunction;
+        } else {
+          astPath.node.properties.push(
+            t.objectProperty(t.identifier('rewrites'), arrowFunction),
+          );
+        }
       },
     });
     const result = generator(ast);
@@ -156,10 +166,13 @@ class Service {
       const distPath = path.join(appDir, `.uext/${type}`);
       fs.copySync(filePath, distPath);
     });
+
     this.config.copy.files.forEach((filename) => {
+
       let filePath = path.join(appDir, filename);
-      if(fs.existsSync(filePath)) {
-        filePath = path.join(appDir,'src', filename);
+
+      if (!fs.existsSync(filePath)) {
+        filePath = path.join(appDir, 'src', filename);
       }
       const distPath = path.join(appDir, `.uext/${filename}`);
       fs.copySync(filePath, distPath);

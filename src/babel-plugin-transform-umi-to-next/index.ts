@@ -113,17 +113,16 @@ export default class CodeTransform {
                   rootPath.get('body').find(p => p.isImportDeclaration()).insertAfter(importHead)
                 }
 
-                if (astPath.node.openingElement?.name?.name === 'img' && (!astPath.node.closingElement?.name?.name || astPath.node.closingElement?.name?.name === 'img')) {
-                  astPath.traverse({
-                    JSXExpressionContainer(astPath) {
-                      // const expression = astPath.node.expression
-                      // const memberExpressionNode = t.memberExpression(t.identifier('_styleJSX'), t.identifier('createElement'))
-                      if (astPath.node.expression.type === 'CallExpression') {
-                        astPath.node.expression = t.memberExpression(astPath.node.expression, t.identifier('default.src'),)
-                      }
+                // if (astPath.node.openingElement?.name?.name === 'img' && (!astPath.node.closingElement?.name?.name || astPath.node.closingElement?.name?.name === 'img')) {
+
+                // }
+                astPath.traverse({
+                  JSXExpressionContainer(astPath) {
+                    if (astPath.node.expression.type === 'CallExpression' && astPath.node.expression.callee.name === 'require') {
+                      astPath.node.expression = t.memberExpression(astPath.node.expression, t.identifier('default.src'),)
                     }
-                  })
-                }
+                  }
+                })
               }
             })
           }
