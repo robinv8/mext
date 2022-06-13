@@ -1,25 +1,29 @@
 #!/usr/bin/env node
+import minimist from 'minimist'
+import chalk from 'chalk';
+import clear from 'clear';
+import figlet from 'figlet';
+import Service from './Service';
 
-import chalk from "chalk";
-import clear from "clear";
-import figlet from "figlet";
-import {program} from "commander";
-import Service from  './Service'
-clear();
-console.log(
-  chalk.red(
-    figlet.textSync('uext-cli', { horizontalLayout: 'full' })
-  )
-);
-program
-  .version('0.0.1')
-  .description("An example CLI for ordering uext's")
-  .option('-p, --peppers', 'Add peppers')
-  .option('-P, --pineapple', 'Add pineapple')
-  .option('-b, --bbq', 'Add bbq sauce')
-  .option('-c, --cheese <type>', 'Add the specified type of cheese [marble]')
-  .option('-C, --no-cheese', 'You do not want any cheese')
-  .parse(process.argv);
+class CLI {
+  run() {
+    clear();
+    console.log(
+      chalk.red(figlet.textSync('uext-cli', { horizontalLayout: 'full' })),
+    );
+    this.parseArgs()
+  }
+  parseArgs() {
+    const args = minimist(process.argv.slice(2))
+    const _ = args._
+    const command = _[0]
+    switch (command) {
+      case 'generate':
+        const service = new Service();
+        service.run();
+        break;
+    }
+  }
+}
 
-  const service = new Service();
-  service.run();
+export default CLI;

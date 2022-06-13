@@ -18,6 +18,7 @@ specifiers:
   fs-extra: ^10.1.0
   glob: ^8.0.3
   lodash: ^4.17.21
+  minimist: ^1.2.6
   mustache: ^4.2.0
   node-sass: ^7.0.1
   node-sass-alias-importer: ^1.2.0
@@ -43,6 +44,7 @@ dependencies:
   fs-extra: 10.1.0
   glob: 8.0.3
   lodash: 4.17.21
+  minimist: 1.2.6
   mustache: 4.2.0
   node-sass: 7.0.1
   node-sass-alias-importer: 1.2.0_node-sass@7.0.1
@@ -2273,7 +2275,6 @@ packages:
 
   /minimist/1.2.6:
     resolution: {integrity: sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==}
-    dev: true
 
   /minipass-collect/1.0.2:
     resolution: {integrity: sha512-6T6lH0H8OG9kITm/Jm6tdooIbogG9e0tLgpY6mphXSm/A9u8Nq1ryBG+Qspiub9LjWlBPsPS3tWQ/Botq4FdxA==}

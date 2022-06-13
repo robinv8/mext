@@ -1,9 +1,9 @@
 {
   "name": "uext",
   "version": "0.0.1",
-  "main": "./lib/index.js",
+  "main": "index.js",
   "bin": {
-    "uext": "./lib/index.js"
+    "uext": "bin/uext"
   },
   "scripts": {
     "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
@@ -29,6 +29,7 @@
     "fs-extra": "^10.1.0",
     "glob": "^8.0.3",
     "lodash": "^4.17.21",
+    "minimist": "^1.2.6",
     "mustache": "^4.2.0",
     "node-sass": "^7.0.1",
     "node-sass-alias-importer": "^1.2.0",
