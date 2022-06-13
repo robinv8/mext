@@ -14,6 +14,9 @@ interface Config {
     directories: string[];
   };
   transform: string[];
+  metas?;
+  links?;
+  scripts?;
 }
 class Service {
   appDir;
@@ -45,7 +48,7 @@ class Service {
     });
     this.routerTransformTask();
     pluginDva();
-
+    this.generateHeader();
 
     // this.umiToNext(path.join(this.appDir, 'src/pages/Activity/components/Item'), 'index.tsx', 'pages')
   }
@@ -177,6 +180,58 @@ class Service {
       const distPath = path.join(appDir, `.uext/${filename}`);
       fs.copySync(filePath, distPath);
     });
+  }
+  generateHeader() {
+    const code = fs.readFileSync(path.join(this.appDir, '.uext/layouts/index.tsx'));
+
+    const ast = parser.parse(code.toString(), {
+      sourceType: 'module',
+      plugins: ['jsx', 'typescript']
+    });
+
+    const metaAst = this.config?.metas?.map((meta) => {
+      const keys = Object.keys(meta);
+      return t.jsxElement(
+        t.jsxOpeningElement(t.jsxIdentifier('meta'), keys.map(key => {
+          return t.jsxAttribute(t.jsxIdentifier(key), t.stringLiteral(meta[key]))
+        })),
+        t.jsxClosingElement(t.jsxIdentifier('meta')),
+        []
+      );
+
+    })
+    const linkAst = this.config?.links?.map((link) => {
+      const keys = Object.keys(link);
+      return t.jsxElement(
+        t.jsxOpeningElement(t.jsxIdentifier('link'), keys.map(key => {
+          return t.jsxAttribute(t.jsxIdentifier(key), t.stringLiteral(link[key]))
+        })),
+        t.jsxClosingElement(t.jsxIdentifier('link')),
+        []
+      );
+
+    })
+    const scriptAst = this.config?.scripts?.map((script) => {
+      const keys = Object.keys(script);
+      return t.jsxElement(
+        t.jsxOpeningElement(t.jsxIdentifier('script'), keys.map(key => {
+          return t.jsxAttribute(t.jsxIdentifier(key), t.stringLiteral(script[key]))
+        })),
+        t.jsxClosingElement(t.jsxIdentifier('script')),
+        []
+      );
+    })
+
+    traverse(ast, {
+      JSXElement(astPath) {
+        if (astPath.node.openingElement.name.name === 'Helmet') {
+          astPath.node.children = [...astPath.node.children, ...metaAst, ...linkAst, ...scriptAst];
+        }
+      }
+    });
+
+    const result = generator(ast);
+    fs.writeFileSync(path.join(this.appDir, '.uext/layouts/index.tsx'), result.code);
   }
 }
 
