@@ -96,22 +96,22 @@ export default class CodeTransform {
           exit(rootPath) {
             let isCreateHead = false, isCreateImage = false
             rootPath.traverse({
-              ImportSpecifier(astPath) {
-                if (astPath.node.imported.name === 'Helmet') {
-                  astPath.remove()
-                }
+              // ImportSpecifier(astPath) {
+              //   if (astPath.node.imported.name === 'Helmet') {
+              //     astPath.remove()
+              //   }
 
-              },
+              // },
               JSXElement(astPath) {
-                if (astPath.node.openingElement.name.name === 'Helmet' && astPath.node.closingElement.name.name === 'Helmet') {
-                  astPath.node.openingElement.name.name = astPath.node.closingElement.name.name = 'Head'
-                  if (isCreateHead) {
-                    return
-                  }
-                  isCreateHead = true
-                  const importHead = t.importDeclaration([t.importDefaultSpecifier(t.identifier('Head'))], t.stringLiteral('next/head'))
-                  rootPath.get('body').find(p => p.isImportDeclaration()).insertAfter(importHead)
-                }
+                // if (astPath.node.openingElement.name.name === 'Helmet' && astPath.node.closingElement.name.name === 'Helmet') {
+                //   astPath.node.openingElement.name.name = astPath.node.closingElement.name.name = 'Head'
+                //   if (isCreateHead) {
+                //     return
+                //   }
+                //   isCreateHead = true
+                //   const importHead = t.importDeclaration([t.importDefaultSpecifier(t.identifier('Head'))], t.stringLiteral('next/head'))
+                //   rootPath.get('body').find(p => p.isImportDeclaration()).insertAfter(importHead)
+                // }
 
                 // if (astPath.node.openingElement?.name?.name === 'img' && (!astPath.node.closingElement?.name?.name || astPath.node.closingElement?.name?.name === 'img')) {
 

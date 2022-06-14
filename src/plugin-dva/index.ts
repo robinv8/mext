@@ -8,7 +8,7 @@ export default () => {
     return 'models';
   }
   function getAllModels() {
-    const srcPath = join(process.cwd(), '.uext')
+    const srcPath = join(process.cwd(), '.mext')
     return lodash.uniq([
       ...getModels({
         base: srcPath,
@@ -45,7 +45,7 @@ app.model({ namespace: '${basename(path, extname(path))}', ...Model${lodash.uppe
         })
         .join('\r\n')
     })
-    writeFileSync(join(process.cwd(), '.uext/utils/dva.ts'), dvaContent, 'utf-8');
+    writeFileSync(join(process.cwd(), '.mext/utils/dva.ts'), dvaContent, 'utf-8');
   }
   onGenerateFiles()
 };

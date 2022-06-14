@@ -9,7 +9,7 @@ class CLI {
   run() {
     clear();
     console.log(
-      chalk.red(figlet.textSync('uext-cli', { horizontalLayout: 'full' })),
+      chalk.red(figlet.textSync('mext-cli', { horizontalLayout: 'full' })),
     );
     this.parseArgs()
   }

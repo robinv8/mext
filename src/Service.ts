@@ -28,7 +28,7 @@ class Service {
     this.tsConfig = this.loadTsConfig();
   }
   loadConfig() {
-    const configPath = path.join(this.appDir, '.uextrc.ts');
+    const configPath = path.join(this.appDir, '.mextrc.ts');
     const config = require(configPath);
     return config;
   }
@@ -39,8 +39,8 @@ class Service {
   }
   async run() {
     this.copyTask();
-    const nextConfigPath = path.join(this.appDir, '.uext', 'next.tsconfig.json');
-    const tsConfigPath = path.join(this.appDir, '.uext', 'tsconfig.json');
+    const nextConfigPath = path.join(this.appDir, '.mext', 'next.tsconfig.json');
+    const tsConfigPath = path.join(this.appDir, '.mext', 'tsconfig.json');
     fs.renameSync(nextConfigPath, tsConfigPath);
 
     this.config.transform.forEach((type) => {
@@ -65,7 +65,7 @@ class Service {
     const result = generator(ast, {
       retainLines: true,
     });
-    const newFilePath = filePath.replace(`/src/${type}`, `/.uext/${type}`);
+    const newFilePath = filePath.replace(`/src/${type}`, `/.mext/${type}`);
     if (!fs.existsSync(newFilePath)) {
       fs.mkdirSync(newFilePath, { recursive: true });
     }
@@ -76,7 +76,7 @@ class Service {
     fs.writeFileSync(path.join(newFilePath, newFileName), result.code);
   }
   copyFile(filePath, filename, type) {
-    const newFilePath = filePath.replace(`/src/${type}`, `/.uext/${type}`);
+    const newFilePath = filePath.replace(`/src/${type}`, `/.mext/${type}`);
     if (!fs.existsSync(newFilePath)) {
       fs.mkdirSync(newFilePath, { recursive: true });
     }
@@ -116,7 +116,7 @@ class Service {
   }
   async routerTransformTask() {
     const routerPath = path.join(this.appDir, 'routes.json');
-    const nextConfigPath = path.join(this.appDir, '.uext/next.config.js');
+    const nextConfigPath = path.join(this.appDir, '.mext/next.config.js');
     const routes = require(routerPath);
     const routerTransformer = new RouterTransformer(routes);
     const nextRoutes = routerTransformer.transform();
@@ -166,9 +166,15 @@ class Service {
     const appDir = this.appDir;
     this.config.copy.directories.forEach((type) => {
       const filePath = path.join(appDir, `src/${type}`);
-      const distPath = path.join(appDir, `.uext/${type}`);
+      const distPath = path.join(appDir, `.mext/${type}`);
       fs.copySync(filePath, distPath);
     });
+    const filePath = path.join(appDir, 'public');
+    if(fs.existsSync(filePath)) {
+      const distPath = path.join(appDir, `.mext/public`);
+      fs.copySync(filePath, distPath);
+    }
+
 
     this.config.copy.files.forEach((filename) => {
 
@@ -177,12 +183,12 @@ class Service {
       if (!fs.existsSync(filePath)) {
         filePath = path.join(appDir, 'src', filename);
       }
-      const distPath = path.join(appDir, `.uext/${filename}`);
+      const distPath = path.join(appDir, `.mext/${filename}`);
       fs.copySync(filePath, distPath);
     });
   }
   generateHeader() {
-    const code = fs.readFileSync(path.join(this.appDir, '.uext/layouts/index.tsx'));
+    const code = fs.readFileSync(path.join(this.appDir, '.mext/layouts/index.tsx'));
 
     const ast = parser.parse(code.toString(), {
       sourceType: 'module',
@@ -231,7 +237,7 @@ class Service {
     });
 
     const result = generator(ast);
-    fs.writeFileSync(path.join(this.appDir, '.uext/layouts/index.tsx'), result.code);
+    fs.writeFileSync(path.join(this.appDir, '.mext/layouts/index.tsx'), result.code);
   }
 }
 
