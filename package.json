@@ -23,9 +23,6 @@
     "url": "https://github.com/robinv8/mext/issues"
   },
   "homepage": "https://github.com/robinv8/mext#readme",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
   "dependencies": {
     "@babel/core": "^7.17.12",
     "@babel/generator": "^7.17.12",
