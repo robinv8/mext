@@ -1,5 +1,5 @@
 {
-  "name": "@mext/cli",
+  "name": "mext-cli",
   "version": "0.0.4",
   "main": "index.js",
   "private": false,
