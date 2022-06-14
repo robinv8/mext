@@ -16,7 +16,7 @@ jobs:
       - run: npm install
       - run: npm run build
       - run: |
-          echo @lexacode:https://npm.pkg.github.com/ > dist/.npmrc
+          echo @robinv8:https://npm.pkg.github.com/ > dist/.npmrc
           echo '//npm.pkg.github.com/:_authToken=${NPM_TOKEN}' >> dist/.npmrc
       - run: npm publish
         working-directory: ./dist
