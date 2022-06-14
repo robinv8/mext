@@ -17,6 +17,12 @@
     "refresh": "rm -rf ./node_modules ./package-lock.json && npm install",
     "release": "release-it"
   },
+  "repository": "https://github.com/robinv8/mext",
+  "author": "robin <robin@rnode.me> (https://github.com/robinv8)",
+  "bugs": {
+    "url": "https://github.com/robinv8/mext/issues"
+  },
+  "homepage": "https://github.com/robinv8/mext#readme",
   "dependencies": {
     "@babel/core": "^7.17.12",
     "@babel/generator": "^7.17.12",
@@ -41,6 +47,8 @@
     "tsc-alias": "^1.6.7"
   },
   "devDependencies": {
+    "@commitlint/config-conventional": "^17.0.2",
+    "@release-it/conventional-changelog": "^5.0.0",
     "@types/fs-extra": "^9.0.13",
     "@types/lodash": "^4.14.182",
     "@types/node": "^17.0.33",
@@ -51,5 +59,27 @@
     "ts-node": "^10.7.0",
     "typescript": "^4.6.4"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release ${version}",
+      "tagName": "v${version}"
+    },
+    "npm": {
+      "publish": true
+    },
+    "github": {
+      "release": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular"
+      }
+    }
+  }
 }
